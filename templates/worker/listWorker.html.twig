@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}
+    <h1>List Of Workers</h1>
+{% endblock %}
+{% block section %}
+    <section class="section">
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Default Table</h5>
+
+                    <!-- Default Table -->
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Phone</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for worker in listOfWorkers %}
+                                <tr>
+                                    <th scope="row">{{ worker.id }}</th>
+                                    <td>{{ worker.name }}</td>
+                                    <td>{{ worker.lastName }}</td>
+                                    <td>{{ worker.email }}</td>
+                                    <td>{{ worker.phone }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- End Default Table Example -->
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+
