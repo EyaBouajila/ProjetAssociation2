@@ -28,6 +28,9 @@
 
     <!-- Template Main CSS File -->
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
+    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+
+
 
     <!-- =======================================================
     * Template Name: NiceAdmin - v2.4.1
@@ -507,7 +510,6 @@
 
 {% block body %}
     <main id="main" class="main">
-
             <div class="pagetitle">
                 {% block title %}
                 <h1>Dashboard</h1>
@@ -519,11 +521,28 @@
                     </ol>
                 </nav>
             </div><!-- End Page Title -->
+        {% block flashbags %}
+            {% for msg in app.session.flashBag.get('info') %}
+                <div class="alert alert-info" role="alert">
+                    {{ msg }}
+                </div>
+            {% endfor %}
 
+            {% for msg in app.session.flashBag.get('error') %}
+                <div class="alert alert-danger" role="alert">
+                    {{ msg }}
+                </div>
+            {% endfor %}
+
+            {% for msg in app.session.flashBag.get('success') %}
+                <div class="alert alert-success" role="alert">
+                    {{ msg }}
+                </div>
+            {% endfor %}
+        {% endblock %}
         {% block section %}
             <section class="section dashboard">
             <div class="row">
-
                 <!-- Left side columns -->
                 <div class="col-lg-8">
                     <div class="row">
