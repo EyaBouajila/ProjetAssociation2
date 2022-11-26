@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    <h1>List Of funders</h1>
+{% endblock %}
+{% block section %}
+    <section class="section">
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Default Table</h5>
+
+                    <!-- Default Table -->
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Phone</th>
+                            <th scope="col">address</th>
+                            <th scope="col">NbrActivities</th>
+                            <th scope="col">FunderType</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for funder in listOfFunders %}
+                            <tr>
+                                <th scope="row">{{ funder.id }}</th>
+                                <td>{{ funder.name }}</td>
+                                <td>{{ funder.email }}</td>
+                                <td>{{ funder.phone }}</td>
+                                <td>{{ funder.address }}</td>
+                                <td>{{ funder.nbrActivities }}</td>
+                                <td>{{ funder.funderType }}</td>
+                                <td>
+                                    <a href="{{ path('funder.update', {id : funder.id}) }}" class="link-warning" style="text-decoration: none">
+                                        <i class="fa-solid fa-user-pen"></i>
+                                    </a>
+
+                                    <a href="{{ path('funder.delete', {id : funder.id}) }}"
+                                       onclick="return confirm('you will delete this funder');"
+                                       class="link-danger" style="text-decoration: none">
+                                        <i class="fa-solid fa-user-xmark"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- End Default Table Example -->
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

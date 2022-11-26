@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block section %}
+    {{ form_start(f) }}
+    <div class="row">
+        <div class="col">{{ form_row(f.activityType) }}</div>
+        <div class="col">{{ form_row(f.activityGoal) }}</div>
+    </div>
+    <div class="row">
+        <div class="col">{{ form_row(f.demandDate)  }}</div>
+        <div class="col">{{ form_row(f.activityDueDate) }}</div>
+
+    </div>
+    <div class="row">
+        <div class="col">{{ form_row(f.state) }}</div>
+        <div class="col">{{ form_row(f.activityFunder) }}</div>
+    </div>
+    <div class="row">
+        <div class="col">{{ form_row(f.workersInvolved) }}</div>
+        <div class="col">{{ form_row(f.targetPatient) }}</div>
+        <div class="col">{{ form_row(f.targetProject) }}</div>
+    </div>
+    {% if isEdit %}
+        <div class="row">
+            <div class="col">{{ form_row(f.edit) }}</div>
+        </div>
+    {% endif %}
+
+    {% if not isEdit %}
+        <div class="row">
+            <div class="col">{{ form_row(f.save) }}</div>
+        </div>
+    {% endif %}
+
+{% endblock %}
+

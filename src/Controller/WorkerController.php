@@ -29,7 +29,6 @@ class WorkerController extends AbstractController
         ]);// [id,name,ln,..]
     }
 
-
     #[Route('/worker/add', name: 'worker.add')]
     public function addWorker(ManagerRegistry $doctrine, Request $request): Response
     {
@@ -45,7 +44,7 @@ class WorkerController extends AbstractController
             $entityManager = $doctrine->getManager();
             //$form->getData(); return array of data
             //WorkerType : name -> object (worker : attribut : name) => mapping
-            $entityManager->persist($worker); //objet (['name','lastName', ...]
+            $entityManager->persist($worker); //objet (['name','lastName', ...])
 
             //exécution
             $entityManager->flush();
@@ -53,7 +52,6 @@ class WorkerController extends AbstractController
             $this->addFlash('success',"worker added successfully ");
             return $this->redirectToRoute('worker.list');
         }
-
 
         return $this->render('worker/add-worker.html.twig',[
             //passer la form au formulaire

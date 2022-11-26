@@ -2,22 +2,31 @@
 
 namespace App\Form;
 
-use App\Entity\Worker;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Funder;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class WorkerType extends AbstractType
+class FunderType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('name')
-            ->add('lastName')
             ->add('phone')
             ->add('email')
+            ->add('address')
+            ->add('funderType', ChoiceType::class, [
+                'choices' => [
+                    'individual' => 'indiv',
+                    'donor institution' => 'donorInst',
+                    'social responsibility in companies and banks' => 'socialResp',
+                    'entity in the government sector' => 'entityGov',
+                    'charitable company' => 'charComp',
+                ],
+                ])
 //            ->add('worker',EntityType::class,['class'=>Worker::class])
             ->add('save',SubmitType::class)
             ->add('edit',SubmitType::class)
@@ -27,7 +36,7 @@ class WorkerType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Worker::class,
+            'data_class' => Funder::class,
         ]);
     }
 }

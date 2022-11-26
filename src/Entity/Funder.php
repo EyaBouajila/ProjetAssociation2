@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\WorkerRepository;
+use App\Repository\FunderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: WorkerRepository::class)]
-class Worker
+#[ORM\Entity(repositoryClass: FunderRepository::class)]
+class Funder
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,21 +19,28 @@ class Worker
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $lastName = null;
+    private ?string $email = null;
 
     #[ORM\Column(length: 255)]
     private ?string $phone = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $email = null;
+    #[ORM\Column(length: 255)]
+    private ?string $address = null;
 
-    #[ORM\ManyToMany(targetEntity: Demand::class, mappedBy: 'workersInvolved')]
+    #[ORM\Column(nullable: true)]
+    private ?int $nbrActivities = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $funderType = null;
+
+    #[ORM\OneToMany(mappedBy: 'activityFunder', targetEntity: Demand::class, orphanRemoval: true)]
     private Collection $demands;
 
     public function __construct()
     {
         $this->demands = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -52,14 +59,14 @@ class Worker
         return $this;
     }
 
-    public function getLastName(): ?string
+    public function getEmail(): ?string
     {
-        return $this->lastName;
+        return $this->email;
     }
 
-    public function setLastName(string $lastName): self
+    public function setEmail(string $email): self
     {
-        $this->lastName = $lastName;
+        $this->email = $email;
 
         return $this;
     }
@@ -76,17 +83,51 @@ class Worker
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getAddress(): ?string
     {
-        return $this->email;
+        return $this->address;
     }
 
-    public function setEmail(?string $email): self
+    public function setAddress(string $address): self
     {
-        $this->email = $email;
+        $this->address = $address;
 
         return $this;
     }
+
+    /**
+     * @return int|null
+     */
+    public function getNbrActivities(): ?int
+    {
+        return $this->nbrActivities;
+    }
+
+    /**
+     * @param int|null $nbrActivities
+     */
+    public function setNbrActivities(?int $nbrActivities): void
+    {
+        $this->nbrActivities = $nbrActivities;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFunderType(): ?string
+    {
+        return $this->funderType;
+    }
+
+    /**
+     * @param string|null $funderType
+     */
+    public function setFunderType(?string $funderType): void
+    {
+        $this->funderType = $funderType;
+    }
+
+
 
     /**
      * @return Collection<int, Demand>
@@ -100,7 +141,7 @@ class Worker
     {
         if (!$this->demands->contains($demand)) {
             $this->demands->add($demand);
-            $demand->addWorkersInvolved($this);
+            $demand->setActivityFunder($this);
         }
 
         return $this;
@@ -109,8 +150,12 @@ class Worker
     public function removeDemand(Demand $demand): self
     {
         if ($this->demands->removeElement($demand)) {
-            $demand->removeWorkersInvolved($this);
+            // set the owning side to null (unless already changed)
+            if ($demand->getActivityFunder() === $this) {
+                $demand->setActivityFunder(null);
+            }
         }
+
         return $this;
     }
 

@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    <h1>List Of Demands</h1>
+{% endblock %}
+{% block section %}
+    <section class="section">
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Default Table</h5>
+
+                    <!-- Default Table -->
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Demand Date</th>
+                            <th scope="col">Activity Due Date</th>
+                            <th scope="col">Activity Type</th>
+                            <th scope="col">Activity Goal</th>
+                            <th scope="col">Funder</th>
+{#                            <th scope="col">Workers involved</th>#}
+{#                            <th scope="col">Target Patients</th>#}
+{#                            <th scope="col">Target Projects</th>#}
+                            <th scope="col">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for demand in listOfDemands %}
+                            <tr>
+                                <th scope="row">{{ demand.id }}</th>
+                                <td>{{ demand.demandDate | date('d-m-Y')}}</td>
+                                <td>{{ demand.activityDueDate | date('d-m-Y')}}</td>
+                                <td>{{ demand.activityType }}</td>
+                                <td>{{ demand.activityGoal }}</td>
+                                <td>{{ demand.activityFunder }}</td>
+{#                                <td>{{ demand.workersInvolved }}</td>#}
+{#                                <td>{{ demand.targetPatient }}</td>#}
+{#                                <td>{{ demand.targetProject }}</td>#}
+                                <td>
+                                    <a href="{{ path('demand.update', {id : demand.id}) }}" class="link-warning" style="text-decoration: none">
+                                        <i class="fa-solid fa-user-pen"></i>
+                                    </a>
+                                    <a href="{{ path('demand.delete', {id : demand.id}) }}"
+                                       onclick="return confirm('you will delete this demand');"
+                                       class="link-danger" style="text-decoration: none">
+                                        <i class="fa-solid fa-user-xmark"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- End Default Table Example -->
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+
+

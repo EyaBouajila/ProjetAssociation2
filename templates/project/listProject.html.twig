@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    <h1>List Of Projects</h1>
+{% endblock %}
+{% block section %}
+    <section class="section">
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Default Table</h5>
+
+                    <!-- Default Table -->
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Funding Needed</th>
+                            <th scope="col">Project Details</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for project in listOfProjects %}
+                            <tr>
+                                <th scope="row">{{ project.id }}</th>
+                                <td>{{ project.fundingNeeded }}</td>
+                                <td>{{ project.projectDetails }}</td>
+                                <td>
+                                    <a href="{{ path('project.update', {id : project.id}) }}" class="link-warning" style="text-decoration: none">
+                                        <i class="fa-solid fa-user-pen"></i>
+                                    </a>
+                                    <a href="{{ path('funder.delete', {id : project.id}) }}"
+                                       onclick="return confirm('you will delete this project');"
+                                       class="link-danger" style="text-decoration: none">
+                                        <i class="fa-solid fa-user-xmark"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- End Default Table Example -->
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
