@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Demand;
+use App\Entity\DemandFundingProject;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Demand>
+ * @extends ServiceEntityRepository<DemandFundingProject>
  *
- * @method Demand|null find($id, $lockMode = null, $lockVersion = null)
- * @method Demand|null findOneBy(array $criteria, array $orderBy = null)
- * @method Demand[]    findAll()
- * @method Demand[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method DemandFundingProject|null find($id, $lockMode = null, $lockVersion = null)
+ * @method DemandFundingProject|null findOneBy(array $criteria, array $orderBy = null)
+ * @method DemandFundingProject[]    findAll()
+ * @method DemandFundingProject[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class DemandRepository extends ServiceEntityRepository
+class DemandFundingProjectRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Demand::class);
+        parent::__construct($registry, DemandFundingProject::class);
     }
 
-    public function save(Demand $entity, bool $flush = false): void
+    public function save(DemandFundingProject $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class DemandRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Demand $entity, bool $flush = false): void
+    public function remove(DemandFundingProject $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -39,17 +39,8 @@ class DemandRepository extends ServiceEntityRepository
         }
     }
 
-    public function findByStatus($status){
-        //select * from demand where status = $status
-        $query =$this->createQueryBuilder('d') //select *
-            ->where('d.state = :status')
-            ->setParameter('status',$status);
-
-        return $query->getQuery()->getResult();
-    }
-
 //    /**
-//     * @return Demand[] Returns an array of Demand objects
+//     * @return DemandFundingProject[] Returns an array of DemandFundingProject objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -63,7 +54,7 @@ class DemandRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Demand
+//    public function findOneBySomeField($value): ?DemandFundingProject
 //    {
 //        return $this->createQueryBuilder('d')
 //            ->andWhere('d.exampleField = :val')

@@ -27,9 +27,13 @@ class Patient
     #[ORM\ManyToMany(targetEntity: Demand::class, mappedBy: 'targetPatient')]
     private Collection $demands;
 
+    #[ORM\OneToMany(mappedBy: 'Patient', targetEntity: DemandFundingPatient::class, orphanRemoval: true)]
+    private Collection $demandFundingPatients;
+
     public function __construct()
     {
         $this->demands = new ArrayCollection();
+        $this->demandFundingPatients = new ArrayCollection();
     }
 
     /**
@@ -129,6 +133,36 @@ class Patient
     {
         // TODO: Implement __toString() method.
         return 'patient id = '. $this->getId();
+    }
+
+    /**
+     * @return Collection<int, DemandFundingPatient>
+     */
+    public function getDemandFundingPatients(): Collection
+    {
+        return $this->demandFundingPatients;
+    }
+
+    public function addDemandFundingPatient(DemandFundingPatient $demandFundingPatient): self
+    {
+        if (!$this->demandFundingPatients->contains($demandFundingPatient)) {
+            $this->demandFundingPatients->add($demandFundingPatient);
+            $demandFundingPatient->setPatient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDemandFundingPatient(DemandFundingPatient $demandFundingPatient): self
+    {
+        if ($this->demandFundingPatients->removeElement($demandFundingPatient)) {
+            // set the owning side to null (unless already changed)
+            if ($demandFundingPatient->getPatient() === $this) {
+                $demandFundingPatient->setPatient(null);
+            }
+        }
+
+        return $this;
     }
 
 

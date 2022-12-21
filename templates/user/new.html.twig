@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New User{% endblock %}
+
+{% block section %}
+    {{ form_start(f) }}
+    <div class="row">
+        <div class="col">{{ form_row(f.firstName) }}</div>
+        <div class="col">{{ form_row(f.lastName) }}</div>
+    </div>
+    <div class="row">
+        <div class="col">{{ form_row(f.phone) }}</div>
+    </div>
+    <div class="row">
+        <div class="col">{{ form_row(f.email) }}</div>
+        <div class="col">{{ form_row(f.password) }}</div>
+    </div>
+    <div class="row">
+        <div class="col">{{ form_row(f.roles) }}</div>
+    </div>
+
+
+    {% if isEdit %}
+        <div class="row">
+            <div class="col">{{ form_row(f.edit) }}</div>
+        </div>
+    {% endif %}
+
+    {% if not isEdit %}
+        <div class="row">
+            <div class="col">{{ form_row(f.save) }}</div>
+        </div>
+    {% endif %}
+
+{% endblock %}

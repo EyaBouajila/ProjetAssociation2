@@ -2,21 +2,28 @@
 
 namespace App\Controller;
 
-
-use App\Entity\Worker;
-use App\Form\WorkerType;
+use App\Entity\User;
+use App\Form\UserType;
+use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-class WorkerController extends AbstractController
+#[Route('/user'), IsGranted("ROLE_ADMIN")]
+class UserController extends AbstractController
 {
+    public function __construct(private UserPasswordHasherInterface $hasher)
+    {
+    }
+
     #[Route('/worker/list', name: 'worker.list')]
     public function listworkers(ManagerRegistry $doctrine): Response
     {
-        $repo = $doctrine->getRepository(Worker::class); //bech ni5dem bel les methodes sous workerrepository
+        $repo = $doctrine->getRepository(User::class); //bech ni5dem bel les methodes sous workerrepository
         $worker = $repo->findAll(); // k => v
         if(!isset($worker)) // array empty
         {
@@ -24,7 +31,7 @@ class WorkerController extends AbstractController
             //return $this->redirectToRoute('worker.list');
         }
 
-        return $this->render('worker/listWorker.html.twig', [
+        return $this->render('user/show.html.twig', [
             'listOfWorkers' => $worker,
         ]);// [id,name,ln,..]
     }
@@ -32,16 +39,17 @@ class WorkerController extends AbstractController
     #[Route('/worker/add', name: 'worker.add')]
     public function addWorker(ManagerRegistry $doctrine, Request $request): Response
     {
-        $worker = new Worker(); //objet vide temporairement
+        $worker = new User(); //objet vide temporairement
         //l'image de notre formulaire
         //classType (form) | object (entity)
-        $form = $this->createForm(WorkerType::class, $worker);
+        $form = $this->createForm(UserType::class, $worker);
 
         $form->handleRequest($request); //form now know it's a post request
 
         if($form->isSubmitted()) //clicked on submit (methode post)
         {
             $entityManager = $doctrine->getManager();
+            $worker->setPassword($this->hasher->hashPassword($worker,$worker->getPassword()));
             //$form->getData(); return array of data
             //WorkerType : name -> object (worker : attribut : name) => mapping
             $entityManager->persist($worker); //objet (['name','lastName', ...])
@@ -53,7 +61,7 @@ class WorkerController extends AbstractController
             return $this->redirectToRoute('worker.list');
         }
 
-        return $this->render('worker/add-worker.html.twig',[
+        return $this->render('user/new.html.twig',[
             //passer la form au formulaire
             'f'=>$form->createView(),
             'isEdit'=>false
@@ -61,15 +69,15 @@ class WorkerController extends AbstractController
     }
 
     #[Route('/worker/update/{id?0}', name: 'worker.update')]
-    public function updateWorker(ManagerRegistry $doctrine, Worker $worker = null , Request $request): Response
+    public function updateWorker(ManagerRegistry $doctrine, User $worker = null , Request $request): Response
     {
-        //si la personne (id ==0) est null
+        //si la personne (id == 0) est null
         if (!isset($worker))
         {
             return $this->redirectToRoute('worker.list');
         }
 
-        $form = $this->createForm(WorkerType::class, $worker);
+        $form = $this->createForm(UserType::class, $worker);
 
         $form->handleRequest($request); //form now know it's a post request
 
@@ -77,6 +85,8 @@ class WorkerController extends AbstractController
         {
             $entityManager = $doctrine->getManager();
             //$form->getData(); return array of data
+            $worker->setPassword($this->hasher->hashPassword($worker,$worker->getPassword()));
+
 
             $entityManager->persist($worker);
             $entityManager->flush();
@@ -85,7 +95,7 @@ class WorkerController extends AbstractController
             return $this->redirectToRoute('worker.list');
         }
 
-        return $this->render('worker/add-worker.html.twig',[
+        return $this->render('user/new.html.twig',[
             //passer la form au formulaire
             'f'=>$form->createView(),
             'isEdit'=>true
@@ -93,14 +103,14 @@ class WorkerController extends AbstractController
     }
 
     #[Route('/worker/delete/{id?0}', name: 'worker.delete')]
-    public function deleteWorker(ManagerRegistry $doctrine, Worker $worker = null) : Response
+    public function deleteWorker(ManagerRegistry $doctrine, User $worker = null) : Response
     {
         if(isset($worker))
         {
             $mg = $doctrine->getManager();
             $mg->remove($worker);
 
-            $this->addFlash('success',$worker->getName()." deleted successfully");
+            $this->addFlash('success',$worker->getFirstName()." deleted successfully");
             //exécution
             $mg->flush();
         }
@@ -110,5 +120,4 @@ class WorkerController extends AbstractController
         }
         return $this->redirectToRoute('worker.list');
     }
-
 }

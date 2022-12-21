@@ -20,17 +20,20 @@ class DemandType extends AbstractType
     {
         $builder
             ->add('activityType')
-            ->add('demandDate',DateType::class, [
+            ->add('activityDueDate',DateType::class, [
                 'widget' => 'choice',
             ])
-            ->add('activityDueDate')
             ->add('activityGoal')
             ->add('activityFunder')//one funder to one demand
-            ->add('workersInvolved',EntityType::class,[
-                'class'=>Worker::class,
-                'multiple'=>true,
-                'attr'=>['class'=>'select2']
-                ])
+//            ->add('targetType', ChoiceType::class, [
+//                'mapped'=> false,
+//                'choices'  => [
+//                    'Patient' => 0,
+//                    'Project' => 1,
+//                ],
+//                'expanded'=>true,
+//                'multiple'=>false,
+//            ])
             ->add('targetPatient', EntityType::class,[
                 'class'=>Patient::class,
                 'multiple'=>true,
@@ -39,21 +42,10 @@ class DemandType extends AbstractType
             ->add('targetProject',EntityType::class,[
                 'class'=>Project::class,
                 'multiple'=>true,
+                'required'   => false,
                 'attr'=>['class'=>'select2']
             ])
-            ->add('state', ChoiceType::class, [
-                'choices' => [
-                    'pending' => 'pending',
-                    'toReview' => 'toReview',
-                    'acceptedAdmin' => 'acceptedAdmin',
-                    'refusedAdmin' => 'refusedAdmin',
-                    'acceptedToSA' => 'acceptedToSA',
-                    'refusedCEO' => 'refusedCEO',
-                    'acceptedToSG' => 'acceptedToSG',
-                    'acceptedSG' => 'acceptedSG',
-                    'refusedSG' => 'refusedSG',
-                ],
-            ])
+            ->add('fundingRecieved')
             ->add('save',SubmitType::class)
             ->add('edit',SubmitType::class)
         ;

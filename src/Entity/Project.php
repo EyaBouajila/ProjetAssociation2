@@ -24,9 +24,13 @@ class Project
     #[ORM\ManyToMany(targetEntity: Demand::class, mappedBy: 'targetProject')]
     private Collection $demands;
 
+    #[ORM\OneToMany(mappedBy: 'Project', targetEntity: DemandFundingProject::class, orphanRemoval: true)]
+    private Collection $demandFundingProjects;
+
     public function __construct()
     {
         $this->demands = new ArrayCollection();
+        $this->demandFundingProjects = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -99,5 +103,35 @@ class Project
     {
         // TODO: Implement __toString() method.
         return 'project id = '.$this->getId();
+    }
+
+    /**
+     * @return Collection<int, DemandFundingProject>
+     */
+    public function getDemandFundingProjects(): Collection
+    {
+        return $this->demandFundingProjects;
+    }
+
+    public function addDemandFundingProject(DemandFundingProject $demandFundingProject): self
+    {
+        if (!$this->demandFundingProjects->contains($demandFundingProject)) {
+            $this->demandFundingProjects->add($demandFundingProject);
+            $demandFundingProject->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDemandFundingProject(DemandFundingProject $demandFundingProject): self
+    {
+        if ($this->demandFundingProjects->removeElement($demandFundingProject)) {
+            // set the owning side to null (unless already changed)
+            if ($demandFundingProject->getProject() === $this) {
+                $demandFundingProject->setProject(null);
+            }
+        }
+
+        return $this;
     }
 }

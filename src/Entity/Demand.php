@@ -3,21 +3,22 @@
 namespace App\Entity;
 
 use App\Repository\DemandRepository;
+use App\Traits\TimeStampTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DemandRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Demand
 {
+    use TimeStampTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $demandDate = null;
 
     #[ORM\Column(length: 255)]
     private ?string $activityType = null;
@@ -41,14 +42,25 @@ class Demand
     #[ORM\ManyToMany(targetEntity: Project::class, inversedBy: 'demands')]
     private Collection $targetProject;
 
-    #[ORM\ManyToMany(targetEntity: Worker::class, inversedBy: 'demands')]
-    private Collection $workersInvolved;
+    #[ORM\Column(nullable: true)]
+    private ?float $fundingRecieved = null;
+
+    #[ORM\OneToMany(mappedBy: 'Demand', targetEntity: DemandFundingPatient::class, orphanRemoval: true)]
+    private Collection $demandFundingPatients;
+
+    #[ORM\OneToMany(mappedBy: 'Demand', targetEntity: DemandFundingProject::class, orphanRemoval: true)]
+    private Collection $demandFundingProjects;
+
+    #[ORM\ManyToOne(inversedBy: 'demands')]
+    private ?User $workerInv = null;
+
 
     public function __construct()
     {
         $this->targetPatient = new ArrayCollection();
         $this->targetProject = new ArrayCollection();
-        $this->workersInvolved = new ArrayCollection();
+        $this->demandFundingPatients = new ArrayCollection();
+        $this->demandFundingProjects = new ArrayCollection();
     }
 
     /**
@@ -59,6 +71,7 @@ class Demand
         return $this->id;
     }
 
+
     /**
      * @param int|null $id
      */
@@ -67,21 +80,6 @@ class Demand
         $this->id = $id;
     }
 
-    /**
-     * @return \DateTimeInterface|null
-     */
-    public function getDemandDate(): ?\DateTimeInterface
-    {
-        return $this->demandDate;
-    }
-
-    /**
-     * @param \DateTimeInterface|null $demandDate
-     */
-    public function setDemandDate(?\DateTimeInterface $demandDate): void
-    {
-        $this->demandDate = $demandDate;
-    }
 
     /**
      * @return string|null
@@ -211,29 +209,6 @@ class Demand
         return $this;
     }
 
-    /**
-     * @return Collection<int, Worker>
-     */
-    public function getWorkersInvolved(): Collection
-    {
-        return $this->workersInvolved;
-    }
-
-    public function addWorkersInvolved(Worker $workersInvolved): self
-    {
-        if (!$this->workersInvolved->contains($workersInvolved)) {
-            $this->workersInvolved->add($workersInvolved);
-        }
-
-        return $this;
-    }
-
-    public function removeWorkersInvolved(Worker $workersInvolved): self
-    {
-        $this->workersInvolved->removeElement($workersInvolved);
-
-        return $this;
-    }
 
     public function __toString(): string
     {
@@ -241,5 +216,87 @@ class Demand
         return $this->activityFunder;
     }
 
+    public function getFundingRecieved(): ?float
+    {
+        return $this->fundingRecieved;
+    }
 
+    public function setFundingRecieved(?float $fundingRecieved): self
+    {
+        $this->fundingRecieved = $fundingRecieved;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DemandFundingPatient>
+     */
+    public function getDemandFundingPatients(): Collection
+    {
+        return $this->demandFundingPatients;
+    }
+
+    public function addDemandFundingPatient(DemandFundingPatient $demandFundingPatient): self
+    {
+        if (!$this->demandFundingPatients->contains($demandFundingPatient)) {
+            $this->demandFundingPatients->add($demandFundingPatient);
+            $demandFundingPatient->setDemand($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDemandFundingPatient(DemandFundingPatient $demandFundingPatient): self
+    {
+        if ($this->demandFundingPatients->removeElement($demandFundingPatient)) {
+            // set the owning side to null (unless already changed)
+            if ($demandFundingPatient->getDemand() === $this) {
+                $demandFundingPatient->setDemand(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DemandFundingProject>
+     */
+    public function getDemandFundingProjects(): Collection
+    {
+        return $this->demandFundingProjects;
+    }
+
+    public function addDemandFundingProject(DemandFundingProject $demandFundingProject): self
+    {
+        if (!$this->demandFundingProjects->contains($demandFundingProject)) {
+            $this->demandFundingProjects->add($demandFundingProject);
+            $demandFundingProject->setDemand($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDemandFundingProject(DemandFundingProject $demandFundingProject): self
+    {
+        if ($this->demandFundingProjects->removeElement($demandFundingProject)) {
+            // set the owning side to null (unless already changed)
+            if ($demandFundingProject->getDemand() === $this) {
+                $demandFundingProject->setDemand(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getWorkerInv(): ?User
+    {
+        return $this->workerInv;
+    }
+
+    public function setWorkerInv(?User $workerInv): self
+    {
+        $this->workerInv = $workerInv;
+
+        return $this;
+    }
 }

@@ -8,36 +8,37 @@
         <div class="row">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Default Table</h5>
+
+                    <a href="{{ path('demand.add') }}" class="btn btn-primary mt-3 mb-3">
+                        Add Demand
+                        <i class="fa-solid fa-square-plus"></i>
+                    </a>
 
                     <!-- Default Table -->
                     <table class="table">
                         <thead>
                         <tr>
                             <th scope="col">Id</th>
-                            <th scope="col">Demand Date</th>
                             <th scope="col">Activity Due Date</th>
                             <th scope="col">Activity Type</th>
                             <th scope="col">Activity Goal</th>
                             <th scope="col">Funder</th>
-{#                            <th scope="col">Workers involved</th>#}
-{#                            <th scope="col">Target Patients</th>#}
-{#                            <th scope="col">Target Projects</th>#}
+                            <th scope="col">Funding Recieved</th>
                             <th scope="col">Action</th>
+                            {% if not is_granted("ROLE_WORKER") %}
+                            <th scope="col">Demand Status</th>
+                            {% endif %}
                         </tr>
                         </thead>
                         <tbody>
                         {% for demand in listOfDemands %}
                             <tr>
                                 <th scope="row">{{ demand.id }}</th>
-                                <td>{{ demand.demandDate | date('d-m-Y')}}</td>
                                 <td>{{ demand.activityDueDate | date('d-m-Y')}}</td>
                                 <td>{{ demand.activityType }}</td>
                                 <td>{{ demand.activityGoal }}</td>
                                 <td>{{ demand.activityFunder }}</td>
-{#                                <td>{{ demand.workersInvolved }}</td>#}
-{#                                <td>{{ demand.targetPatient }}</td>#}
-{#                                <td>{{ demand.targetProject }}</td>#}
+                                <td>{{ demand.fundingRecieved }}</td>
                                 <td>
                                     <a href="{{ path('demand.update', {id : demand.id}) }}" class="link-warning" style="text-decoration: none">
                                         <i class="fa-solid fa-user-pen"></i>
@@ -48,6 +49,37 @@
                                         <i class="fa-solid fa-user-xmark"></i>
                                     </a>
                                 </td>
+                                {% if not is_granted("ROLE_WORKER") %}
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Decision
+                                        </button>
+                                        {% if is_granted('ROLE_ADMIN') %}
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="{{ path('demand.update.status', {'id' : demand.id, 'value':'accept'}) }}">Accept</a>
+                                            <a class="dropdown-item" href="{{ path('demand.update.status', {'id' : demand.id, 'value':'refuse'}) }}">Refuse</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="{{ path('demand.update.status', {'id' : demand.id, 'value':'ceo'}) }}">Accept and send to CEO</a>
+                                        </div>
+                                        {% endif %}
+
+                                        {% if is_granted('ROLE_CEO') %}
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="{{ path('demand.update.status', {'id' : demand.id, 'value':'acceptToSG'}) }}">Accept and send to SG</a>
+                                                <a class="dropdown-item" href="{{ path('demand.update.status', {'id' : demand.id, 'value':'refuse'}) }}">Refuse</a>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if is_granted('ROLE_SG') %}
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="{{ path('demand.update.status', {'id' : demand.id, 'value':'accept'}) }}">Accept</a>
+                                                <a class="dropdown-item" href="{{ path('demand.update.status', {'id' : demand.id, 'value':'refuse'}) }}">Refuse</a>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>
