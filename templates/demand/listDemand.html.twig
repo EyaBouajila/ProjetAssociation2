@@ -3,16 +3,44 @@
 {% block title %}
     <h1>List Of Demands</h1>
 {% endblock %}
+{% block header %}
+    <header id="header" class="header fixed-top d-flex align-items-center">
+
+        <div class="d-flex align-items-center justify-content-between">
+            <a href="#" class="logo d-flex align-items-center">
+                <img src="{{ asset('assets/img/eya.png') }}" alt="">
+                <span class="d-none d-lg-block">Eya's Association</span>
+            </a>
+            <i class="bi bi-list toggle-sidebar-btn"></i>
+        </div><!-- End Logo -->
+        <div class="search-bar">
+            <form class="search-form d-flex align-items-center" method="POST" action="{{ path('demand.search') }}">
+                <input type="text" name="keyword" placeholder="Search" title="Enter search keyword">
+                <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+            </form>
+        </div><!-- End Search Bar -->
+        <nav class="header-nav ms-auto">
+            <ul class="d-flex align-items-center">
+                {% if is_granted("IS_AUTHENTICATED_FULLY") %}
+                    <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
+                        <span class="d-none d-md-block p-3">{{ app.user.firstName }}</span>
+                    </a><!-- End Profile Image Icon -->
+                {% endif %}
+            </ul>
+        </nav><!-- End Icons Navigation -->
+
+    </header><!-- End Header -->
+{% endblock %}
 {% block section %}
     <section class="section">
         <div class="row">
             <div class="card">
                 <div class="card-body">
-
-                    <a href="{{ path('demand.add') }}" class="btn btn-primary mt-3 mb-3">
-                        Add Demand
-                        <i class="fa-solid fa-square-plus"></i>
+                    {% if is_granted("ROLE_WORKER") %}
+                    <a href="{{ path('demand.add') }}" class="link-info">
+                        <i class="fa-solid fa-square-plus fa-3x p-3"></i>
                     </a>
+                    {% endif %}
 
                     <!-- Default Table -->
                     <table class="table">
@@ -24,7 +52,9 @@
                             <th scope="col">Activity Goal</th>
                             <th scope="col">Funder</th>
                             <th scope="col">Funding Recieved</th>
+                            {% if is_granted("ROLE_WORKER") %}
                             <th scope="col">Action</th>
+                            {% endif %}
                             {% if not is_granted("ROLE_WORKER") %}
                             <th scope="col">Demand Status</th>
                             {% endif %}
@@ -39,6 +69,7 @@
                                 <td>{{ demand.activityGoal }}</td>
                                 <td>{{ demand.activityFunder }}</td>
                                 <td>{{ demand.fundingRecieved }}</td>
+                                {% if is_granted("ROLE_WORKER") %}
                                 <td>
                                     <a href="{{ path('demand.update', {id : demand.id}) }}" class="link-warning" style="text-decoration: none">
                                         <i class="fa-solid fa-user-pen"></i>
@@ -49,6 +80,7 @@
                                         <i class="fa-solid fa-user-xmark"></i>
                                     </a>
                                 </td>
+                                {% endif %}
                                 {% if not is_granted("ROLE_WORKER") %}
                                 <td>
                                     <div class="dropdown">

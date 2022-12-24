@@ -47,6 +47,39 @@ class DemandRepository extends ServiceEntityRepository
 
         return $query->getQuery()->getResult();
     }
+    public function findByStatus2($status1,$status2){
+        //select * from demand where status = $status
+        $query =$this->createQueryBuilder('d') //select *
+        ->where('d.state = :status1')
+            ->orWhere('d.state = :status2')
+            ->setParameter('status1',$status1)
+            ->setParameter('status2',$status2);
+
+        return $query->getQuery()->getResult();
+    }
+    public function findByStatus3($status1,$status2,$status3){
+        //select * from demand where status = $status
+        $query =$this->createQueryBuilder('d') //select *
+        ->where('d.state = :status1')
+            ->orWhere('d.state = :status2')
+            ->orWhere('d.state = :status3')
+            ->setParameter('status1',$status1)
+            ->setParameter('status2',$status2)
+            ->setParameter('status3',$status3);
+
+        return $query->getQuery()->getResult();
+    }
+
+    public function searchByKeyword($keyword){
+        $query =$this->createQueryBuilder('d')
+            ->where("d.activityType LIKE '%".$keyword."%'");
+//            ->orWhere('d.activityGoal like :keyword')
+//            ->orWhere('d.activityDueDate like :keyword')
+//            ->orWhere('d.activityFunder like :keyword')
+//            ->setParameter('keyword',$keyword);
+
+        return $query->getQuery()->getResult();
+    }
 
 //    /**
 //     * @return Demand[] Returns an array of Demand objects

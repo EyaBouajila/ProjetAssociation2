@@ -110,4 +110,5 @@ class FunderController extends AbstractController
         }
         return $this->redirectToRoute('funder.list');
     }
+
 }

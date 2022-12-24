@@ -8,10 +8,11 @@
         <div class="row">
             <div class="card">
                 <div class="card-body">
-                    <a href="{{ path('patient.add') }}" class="btn btn-primary mt-3 mb-3">
-                        Add Patient
-                        <i class="fa-solid fa-square-plus"></i>
+                    {% if is_granted("ROLE_ADMIN") %}
+                    <a href="{{ path('patient.add') }}"  class="link-info">
+                        <i class="fa-solid fa-square-plus fa-3x p-3"></i>
                     </a>
+                    {% endif %}
 
                     <!-- Default Table -->
                     <table class="table">
@@ -21,7 +22,9 @@
                             <th scope="col">Health Status</th>
                             <th scope="col">Funding Needed</th>
                             <th scope="col">Patient Details</th>
+                            {% if is_granted("ROLE_ADMIN") %}
                             <th scope="col">Action</th>
+                            {% endif %}
                         </tr>
                         </thead>
                         <tbody>
@@ -31,6 +34,7 @@
                                 <td>{{ patient.healthStatus }}</td>
                                 <td>{{ patient.fundingNeeded }}</td>
                                 <td>{{ patient.patientDetails }}</td>
+                                {% if is_granted("ROLE_ADMIN") %}
                                 <td>
                                     <a href="{{ path('patient.update', {id : patient.id}) }}" class="link-warning" style="text-decoration: none">
                                         <i class="fa-solid fa-user-pen"></i>
@@ -42,6 +46,7 @@
                                         <i class="fa-solid fa-user-xmark"></i>
                                     </a>
                                 </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>

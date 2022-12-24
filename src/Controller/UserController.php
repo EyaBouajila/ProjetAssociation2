@@ -120,4 +120,5 @@ class UserController extends AbstractController
         }
         return $this->redirectToRoute('worker.list');
     }
+
 }

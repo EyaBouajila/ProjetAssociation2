@@ -27,8 +27,8 @@ class Funder
     #[ORM\Column(length: 255)]
     private ?string $address = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $nbrActivities = null;
+    #[ORM\Column(nullable: false)]
+    private ?int $nbrActivities = 0;
 
     #[ORM\Column(length: 255)]
     private ?string $funderType = null;

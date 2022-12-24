@@ -18,27 +18,27 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create();
-//            for ($i = 0; $i < 2; $i++) {
-//                $user = new User();
-//                $user->setEmail($faker->email);
-//                $user->setPassword($this->hasher->hashPassword($user,'user'));
-//                $user->setFirstName($faker->firstName);
-//                $user->setLastName($faker->lastName);
-//                $user->setPhone($faker->phoneNumber);
-//                $user->setRoles(["ROLE_ADMIN"]);
-//                $manager->persist($user);
-//            }
-//            for ($i = 0; $i < 5; $i++) {
-//                $user = new User();
-//                $user->setEmail($faker->email);
-//                $user->setPassword($this->hasher->hashPassword($user,'user'));
-//                $user->setFirstName($faker->firstName);
-//                $user->setLastName($faker->lastName);
-//                $user->setPhone($faker->phoneNumber);
-//                $user->setRoles(["ROLE_WORKER"]);
-//                $manager->persist($user);
-//            }
-////        $manager->flush();
+            for ($i = 0; $i < 2; $i++) {
+                $user = new User();
+                $user->setEmail($faker->email);
+                $user->setPassword($this->hasher->hashPassword($user,'user'));
+                $user->setFirstName($faker->firstName);
+                $user->setLastName($faker->lastName);
+                $user->setPhone($faker->phoneNumber);
+                $user->setRoles(["ROLE_ADMIN"]);
+                $manager->persist($user);
+            }
+            for ($i = 0; $i < 5; $i++) {
+                $user = new User();
+                $user->setEmail($faker->email);
+                $user->setPassword($this->hasher->hashPassword($user,'user'));
+                $user->setFirstName($faker->firstName);
+                $user->setLastName($faker->lastName);
+                $user->setPhone($faker->phoneNumber);
+                $user->setRoles(["ROLE_WORKER"]);
+                $manager->persist($user);
+            }
+//        $manager->flush();
 //
 ////        for ($i = 0; $i < 20; $i++) {
 ////            $worker = new Worker();

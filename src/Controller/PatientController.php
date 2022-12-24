@@ -97,4 +97,5 @@ class PatientController extends AbstractController
         }
         return $this->redirectToRoute('patient.list');
     }
+
 }

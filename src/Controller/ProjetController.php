@@ -100,4 +100,5 @@ class ProjetController extends AbstractController
         }
         return $this->redirectToRoute('project.list');
     }
+
 }

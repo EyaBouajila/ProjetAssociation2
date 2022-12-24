@@ -109,6 +109,33 @@ class DemandController extends AbstractController
         ]);
     }
 
+    #[Route('/demand/history', name: 'demand.history')]
+    public function historydemands(ManagerRegistry $doctrine): Response
+    {
+        $arrayRoles = $this->security->getUser()->getRoles();
+        $repo = $doctrine->getRepository(Demand::class);
+        $demand = new Demand();
+        foreach ($arrayRoles as $k => $v){
+            if($v == "ROLE_ADMIN"){
+                $demand = $repo->findByStatus3( "acceptedAdmin","refusedAdmin","acceptedToCEO");
+            }
+            if($v == "ROLE_CEO"){
+                $demand = $repo->findByStatus2("acceptedToSG","refusedCEO");
+            }
+            if($v == "ROLE_SG"){
+                $demand = $repo->findByStatus2("acceptedSG","refusedSG");
+            }
+            if(!isset($demand))
+            {
+                $this->addFlash('error',"demand empty");
+            }
+        }
+
+        return $this->render('demand/listDemandHistory.html.twig', [
+            'listOfDemands' => $demand,
+        ]);
+    }
+
     #[Route('/demand/add', name: 'demand.add')]
     public function addDemand(ManagerRegistry $doctrine, Request $request): Response
     {
@@ -123,15 +150,12 @@ class DemandController extends AbstractController
             $entityManager = $doctrine->getManager();
             //set the current user (worker)
             $demand->setWorkerInv($this->security->getUser());
-
-
             $demand->setState("review");
 
+            $demand->getActivityFunder()->setNbrActivities($demand->getActivityFunder()->getNbrActivities()+1);
+
             $entityManager->persist($demand);
-
             $entityManager->flush();
-            
-
 
             $this->addFlash('success',"demand added successfully ");
             return $this->redirectToRoute('demand.list');
@@ -189,4 +213,10 @@ class DemandController extends AbstractController
         }
         return $this->redirectToRoute('demand.list');
     }
+
+//    #[Route('/demand/search/{keyword}', name: 'demand.search')]
+//    public function searchDemand(ManagerRegistry $doctrine, Request $request): Response
+//    {
+//    }
+
 }

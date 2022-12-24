@@ -42,7 +42,7 @@ class Demand
     #[ORM\ManyToMany(targetEntity: Project::class, inversedBy: 'demands')]
     private Collection $targetProject;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: false)]
     private ?float $fundingRecieved = null;
 
     #[ORM\OneToMany(mappedBy: 'Demand', targetEntity: DemandFundingPatient::class, orphanRemoval: true)]
