@@ -38,6 +38,15 @@ class DemandRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    public function findBySearchKeyword($keyword){
+        //select * from demand where status = $status
+        $query =$this->createQueryBuilder('d') //select *
+        ->where('d.activityGoal LIKE :keyword')
+            ->setParameter(':keyword','%'.$keyword.'%');
+
+        return $query->getQuery()->getResult();
+    }
+
 
     public function findByStatus($status){
         //select * from demand where status = $status

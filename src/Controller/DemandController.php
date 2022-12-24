@@ -20,6 +20,23 @@ class DemandController extends AbstractController
     {
     }
 
+    #[Route('/demand/list', name: 'demand.search')]
+    public function searchDemand(ManagerRegistry $doctrine, Request $request): Response
+    {
+        $demand = new Demand();
+        $mg= $doctrine->getRepository(Demand::class);
+
+        if($request->isMethod("POST")){
+            $keyword = $request->get("keyword");
+            $demand = $mg->findBySearchKeyword($keyword);
+        }
+        if($demand == null){
+            $demand = $mg->findAll();
+        }
+        return $this->render('demand/listDemand.html.twig', [
+            'listOfDemands' => $demand,
+        ]);
+    }
     #[Route('/demand/updateStatus/{id?0}', name: 'demand.update.status')]
     public function updateDemandStatus(ManagerRegistry $doctrine , Request $request, int $id): Response
     {
@@ -214,9 +231,6 @@ class DemandController extends AbstractController
         return $this->redirectToRoute('demand.list');
     }
 
-//    #[Route('/demand/search/{keyword}', name: 'demand.search')]
-//    public function searchDemand(ManagerRegistry $doctrine, Request $request): Response
-//    {
-//    }
+
 
 }
