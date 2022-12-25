@@ -17,7 +17,7 @@
             <form class="search-form d-flex align-items-center"
                   method="POST">
                 <input type="text" name="keyword" placeholder="Search" title="Enter search keyword">
-                <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+                <button type="submit" onclick="location.href = {{ path('demand.list') }};" title="Search"><i class="bi bi-search"></i></button>
             </form>
         </div>
         <!-- End Search Bar -->
@@ -37,12 +37,22 @@
     <section class="section">
         <div class="row">
             <div class="card">
-                <div class="card-body">
+                <div class="card-header">
                     {% if is_granted("ROLE_WORKER") %}
-                    <a href="{{ path('demand.add') }}" class="link-info">
-                        <i class="fa-solid fa-square-plus fa-3x p-3"></i>
-                    </a>
+                        <div class="dropdown show">
+                            <a class="btn btn-outline-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Demand Type <i class="fa-solid fa-square-plus"></i>
+                            </a>
+
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{{ path('demand.add', {'value':'patient'}) }}">Add Patient</a>
+                                <a class="dropdown-item" href="{{ path('demand.add', {'value':'project'}) }}">Add Project</a>
+                            </div>
+                        </div>
                     {% endif %}
+                </div>
+
+                <div class="card-body">
 
                     <!-- Default Table -->
                     <table class="table">

@@ -48,11 +48,13 @@ class DemandRepository extends ServiceEntityRepository
     }
 
 
-    public function findByStatus($status){
+    public function findByStatus($status , $keyword){
         //select * from demand where status = $status
         $query =$this->createQueryBuilder('d') //select *
             ->where('d.state = :status')
-            ->setParameter('status',$status);
+            ->andWhere('d.activityGoal LIKE :keyword')
+            ->setParameter('status',$status)
+            ->setParameter(':keyword','%'.$keyword.'%');
 
         return $query->getQuery()->getResult();
     }

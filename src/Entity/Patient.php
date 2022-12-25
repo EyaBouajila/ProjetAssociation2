@@ -30,6 +30,9 @@ class Patient
     #[ORM\OneToMany(mappedBy: 'Patient', targetEntity: DemandFundingPatient::class, orphanRemoval: true)]
     private Collection $demandFundingPatients;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $name = null;
+
     public function __construct()
     {
         $this->demands = new ArrayCollection();
@@ -132,7 +135,7 @@ class Patient
     public function __toString(): string
     {
         // TODO: Implement __toString() method.
-        return 'patient id = '. $this->getId();
+        return $this->getName();
     }
 
     /**
@@ -161,6 +164,18 @@ class Patient
                 $demandFundingPatient->setPatient(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }

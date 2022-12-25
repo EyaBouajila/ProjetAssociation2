@@ -27,6 +27,9 @@ class Project
     #[ORM\OneToMany(mappedBy: 'Project', targetEntity: DemandFundingProject::class, orphanRemoval: true)]
     private Collection $demandFundingProjects;
 
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
     public function __construct()
     {
         $this->demands = new ArrayCollection();
@@ -102,7 +105,7 @@ class Project
     public function __toString(): string
     {
         // TODO: Implement __toString() method.
-        return 'project id = '.$this->getId();
+        return $this->getName();
     }
 
     /**
@@ -131,6 +134,18 @@ class Project
                 $demandFundingProject->setProject(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }

@@ -18,67 +18,17 @@
         <div class="col">{{ form_row(f.activityFunder) }}</div>
     </div>
 
-    {#     <fieldset class="row mb-3">
-        <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
-        <div class="col-sm-10">
-            <div class="form-check">
-                <input class="form-check-input"
-                       onclick="javascript:yesnoCheck();"
-                       type="radio"
-                       name="gridRadios"
-                       id="gridRadios1"
-                       value="option1"
-                       checked="">
-                <label class="form-check-label" for="gridRadios1">
-                    First radio
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input"
-                       onclick="javascript:yesnoCheck();"
-                       type="radio"
-                       name="gridRadios"
-                       id="gridRadios2"
-                       value="option2">
-                <label class="form-check-label" for="gridRadios2">
-                    Second radio
-                </label>
-            </div>
-        </div>
-    </fieldset>
-    <script>
-        function yesnoCheck() {
-            if (document.getElementById('gridRadios1').checked) {
-                document.getElementById('ifYes').style.visibility = 'visible';
-            }
-            else{
-                document.getElementById('ifYes').style.visibility = 'hidden';
-            }
 
-            if (document.getElementById('gridRadios2').checked) {
-                document.getElementById('ifYesProject').type = 'text';
-            }
-            else{
-                document.getElementById('ifYesProject').type = 'hidden';
-            }
-        }
-    </script>
-            <div id="ifYes" style="visibility:hidden" class="row">
-        <div class="col">{{ form_row(f.targetPatient) }}</div>
-    </div>
-    <div class="row" id="ifYesProject" type="hidden" class="row">
-        <div class="col">{{ form_row(f.targetProject) }}</div>
-    </div>
-    #}
-
-
-
+    {% if demandType == 'patient' %}
     <div class="row">
         <div class="col">{{ form_row(f.targetPatient) }}</div>
     </div>
+    {% endif %}
+    {% if demandType == 'project' %}
     <div class="row">
         <div class="col">{{ form_row(f.targetProject) }}</div>
     </div>
+    {% endif %}
 
     {% if isEdit %}
         <div class="row">

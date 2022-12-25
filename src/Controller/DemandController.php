@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Demand;
 use App\Entity\DemandFundingPatient;
+use App\Entity\DemandFundingProject;
 use App\Entity\Patient;
 use App\Form\DemandType;
 use Doctrine\Persistence\ManagerRegistry;
@@ -20,23 +21,6 @@ class DemandController extends AbstractController
     {
     }
 
-    #[Route('/demand/list', name: 'demand.search')]
-    public function searchDemand(ManagerRegistry $doctrine, Request $request): Response
-    {
-        $demand = new Demand();
-        $mg= $doctrine->getRepository(Demand::class);
-
-        if($request->isMethod("POST")){
-            $keyword = $request->get("keyword");
-            $demand = $mg->findBySearchKeyword($keyword);
-        }
-        if($demand == null){
-            $demand = $mg->findAll();
-        }
-        return $this->render('demand/listDemand.html.twig', [
-            'listOfDemands' => $demand,
-        ]);
-    }
     #[Route('/demand/updateStatus/{id?0}', name: 'demand.update.status')]
     public function updateDemandStatus(ManagerRegistry $doctrine , Request $request, int $id): Response
     {
@@ -81,15 +65,30 @@ class DemandController extends AbstractController
 
             if($reqValue == 'accept'){
                 $x = 0;
-                $totalPatient = $demand->getTargetPatient()->count();
-                while($x < $totalPatient) {
-                    $demandFundPatient = new DemandFundingPatient();
-                    $demandFundPatient->setDemand($demand);
-                    $demandFundPatient->setPatient($demand->getTargetPatient()->get($x));
-                    $demandFundPatient->setFund($demand->getFundingRecieved() / $totalPatient);
-                    $entityManager->persist($demandFundPatient);
-                    $x++;
+                if(!$demand->getTargetPatient()->isEmpty()){
+                    $totalTarget = $demand->getTargetPatient()->count();
+                    while($x < $totalTarget) {
+                        $demandFundPatient = new DemandFundingPatient();
+                        $demandFundPatient->setDemand($demand);
+                        $demandFundPatient->setPatient($demand->getTargetPatient()->get($x));
+                        $demandFundPatient->setFund($demand->getFundingRecieved() / $totalTarget);
+                        $entityManager->persist($demandFundPatient);
+                        $x++;
+                    }
                 }
+
+                if(!$demand->getTargetProject()->isEmpty()){
+                    $totalTarget = $demand->getTargetProject()->count();
+                    while($x < $totalTarget) {
+                        $demandFundProject = new DemandFundingProject();
+                        $demandFundProject->setDemand($demand);
+                        $demandFundProject->setProject($demand->getTargetProject()->get($x));
+                        $demandFundProject->setFund($demand->getFundingRecieved() / $totalTarget);
+                        $entityManager->persist($demandFundProject);
+                        $x++;
+                    }
+                }
+
                 $entityManager->flush();
             }
 
@@ -100,20 +99,22 @@ class DemandController extends AbstractController
     }
 
     #[Route('/demand/list', name: 'demand.list')]
-    public function listdemands(ManagerRegistry $doctrine): Response
+    public function listdemands(ManagerRegistry $doctrine, Request $request): Response
     {
         $arrayRoles = $this->security->getUser()->getRoles();
         $repo = $doctrine->getRepository(Demand::class);
         $demand = new Demand();
+        $keyword = $request->get("keyword");
+
         foreach ($arrayRoles as $k => $v){
             if($v == "ROLE_ADMIN" || $v == "ROLE_WORKER"){
-                $demand = $repo->findByStatus("review");
+                $demand = $repo->findByStatus("review" , $keyword);
             }
             if($v == "ROLE_CEO"){
-                $demand = $repo->findByStatus("acceptedToCEO");
+                $demand = $repo->findByStatus("acceptedToCEO",$keyword);
             }
             if($v == "ROLE_SG"){
-                $demand = $repo->findByStatus("acceptedToSG");
+                $demand = $repo->findByStatus("acceptedToSG",$keyword);
             }
             if(!isset($demand))
             {
@@ -157,6 +158,7 @@ class DemandController extends AbstractController
     public function addDemand(ManagerRegistry $doctrine, Request $request): Response
     {
         $this->denyAccessUnlessGranted("ROLE_WORKER");
+        $reqValue = $request->get('value');
         $demand = new Demand();
         $form = $this->createForm(DemandType::class, $demand);
 
@@ -180,7 +182,8 @@ class DemandController extends AbstractController
 
         return $this->render('demand/add-demand.html.twig',[
             'f'=>$form->createView(),
-            'isEdit'=>false
+            'isEdit'=>false,
+            'demandType'=>$reqValue
         ]);
     }
 
