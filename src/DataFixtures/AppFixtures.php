@@ -59,17 +59,7 @@ class AppFixtures extends Fixture
             $user->setRoles(["ROLE_SG"]);
             $manager->persist($user);
         }
-//
-////        for ($i = 0; $i < 20; $i++) {
-////            $worker = new Worker();
-////            $worker->setName($faker->name);
-////            $worker->setLastName($faker->lastName);
-////            $worker->setEmail($faker->email);
-////            $worker->setPhone($faker->phoneNumber);
-////
-////            //pre execution ->
-////            $manager->persist($worker);
-////        }
+
         for ($i = 0; $i < 20; $i++) {
             $funder = new Funder();
             $funder->setName($faker->name);

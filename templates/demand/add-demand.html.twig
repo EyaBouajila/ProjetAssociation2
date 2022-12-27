@@ -19,7 +19,7 @@
     </div>
 
 
-    {% if demandType == 'patient' %}
+    {% if demandType == 'patient' or isEdit %}
     <div class="row">
         <div class="col">{{ form_row(f.targetPatient) }}</div>
     </div>

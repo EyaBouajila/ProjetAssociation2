@@ -7,11 +7,13 @@ use App\Entity\DemandFundingPatient;
 use App\Entity\DemandFundingProject;
 use App\Entity\Patient;
 use App\Form\DemandType;
+use App\Service\MailerService;
 use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
@@ -22,7 +24,10 @@ class DemandController extends AbstractController
     }
 
     #[Route('/demand/updateStatus/{id?0}', name: 'demand.update.status')]
-    public function updateDemandStatus(ManagerRegistry $doctrine , Request $request, int $id): Response
+    public function updateDemandStatus(ManagerRegistry $doctrine ,
+                                       Request $request,
+                                       int $id,
+                                       MailerService $mailerService): Response
     {
         $repo = $doctrine->getRepository(Demand::class);
         $demand = $repo->find($id);
@@ -64,8 +69,9 @@ class DemandController extends AbstractController
             $entityManager->flush();
 
             if($reqValue == 'accept'){
-                $x = 0;
+
                 if(!$demand->getTargetPatient()->isEmpty()){
+                    $x = 0;
                     $totalTarget = $demand->getTargetPatient()->count();
                     while($x < $totalTarget) {
                         $demandFundPatient = new DemandFundingPatient();
@@ -78,6 +84,7 @@ class DemandController extends AbstractController
                 }
 
                 if(!$demand->getTargetProject()->isEmpty()){
+                    $x = 0;
                     $totalTarget = $demand->getTargetProject()->count();
                     while($x < $totalTarget) {
                         $demandFundProject = new DemandFundingProject();
@@ -90,6 +97,13 @@ class DemandController extends AbstractController
                 }
 
                 $entityManager->flush();
+
+                $mailerContent  = '<h2> Your demand has been accepted successfully at : '
+                    . $demand->getUpdatedAt()->format('d-m-Y'). '</h2>';
+                $email  = $demand->getActivityFunder()->getEmail();
+                $from = 'testing.symfony123@gmail.com';
+
+                $mailerService->sendEmail(from :$from ,content: $mailerContent, to: $email, subject: 'Demand Added');
             }
 
             $this->addFlash('success', "Demand updated successfully");
@@ -155,7 +169,7 @@ class DemandController extends AbstractController
     }
 
     #[Route('/demand/add', name: 'demand.add')]
-    public function addDemand(ManagerRegistry $doctrine, Request $request): Response
+    public function addDemand(ManagerRegistry $doctrine, Request $request, MailerService $mailerService): Response
     {
         $this->denyAccessUnlessGranted("ROLE_WORKER");
         $reqValue = $request->get('value');
@@ -176,6 +190,12 @@ class DemandController extends AbstractController
             $entityManager->persist($demand);
             $entityManager->flush();
 
+            $mailerContent  = '<h2> Your demand has been added successfully at : '
+                . $demand->getCreatedAt()->format('d-m-Y'). '</h2>';
+            $email  = $demand->getActivityFunder()->getEmail();
+            $from = 'testing.symfony123@gmail.com';
+
+            $mailerService->sendEmail(from :$from ,content: $mailerContent, to: $email, subject: 'Demand Added');
             $this->addFlash('success',"demand added successfully ");
             return $this->redirectToRoute('demand.list');
         }
@@ -212,7 +232,8 @@ class DemandController extends AbstractController
 
         return $this->render('demand/add-demand.html.twig',[
             'f'=>$form->createView(),
-            'isEdit'=>true
+            'isEdit'=>true,
+            'demandType'=>''
         ]);
     }
 
