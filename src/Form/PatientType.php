@@ -15,6 +15,7 @@ class PatientType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('name')
             ->add('healthStatus')
             ->add('fundingNeeded')
             ->add('patientDetails')

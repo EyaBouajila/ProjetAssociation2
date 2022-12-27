@@ -7,11 +7,12 @@
 {% block section %}
     {{ form_start(f) }}
     <div class="row">
+        <div class="col">{{ form_row(f.name) }}</div>
         <div class="col">{{ form_row(f.healthStatus) }}</div>
-        <div class="col">{{ form_row(f.fundingNeeded) }}</div>
     </div>
     <div class="row">
         <div class="col">{{ form_row(f.patientDetails) }}</div>
+        <div class="col">{{ form_row(f.fundingNeeded) }}</div>
     </div>
     {% if isEdit %}
         <div class="row">

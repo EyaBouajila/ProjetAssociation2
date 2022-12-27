@@ -19,6 +19,7 @@
                         <thead>
                         <tr>
                             <th scope="col">Id</th>
+                            <th scope="col">Name</th>
                             <th scope="col">Health Status</th>
                             <th scope="col">Funding Needed</th>
                             <th scope="col">Patient Details</th>
@@ -31,6 +32,7 @@
                         {% for patient in listOfPatients %}
                             <tr>
                                 <th scope="row">{{ patient.id }}</th>
+                                <th scope="row">{{ patient.name }}</th>
                                 <td>{{ patient.healthStatus }}</td>
                                 <td>{{ patient.fundingNeeded }}</td>
                                 <td>{{ patient.patientDetails }}</td>

@@ -234,6 +234,4 @@ class DemandController extends AbstractController
         return $this->redirectToRoute('demand.list');
     }
 
-
-
 }

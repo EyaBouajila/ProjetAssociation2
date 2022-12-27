@@ -7,6 +7,7 @@
 {% block section %}
     {{ form_start(f) }}
     <div class="row">
+        <div class="col">{{ form_row(f.name) }}</div>
         <div class="col">{{ form_row(f.fundingNeeded) }}</div>
         <div class="col">{{ form_row(f.projectDetails) }}</div>
     </div>

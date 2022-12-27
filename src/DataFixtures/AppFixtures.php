@@ -19,27 +19,46 @@ class AppFixtures extends Fixture
     {
         //php bin/console doctrine:fixtures:load --append
         $faker = Factory::create();
-//            for ($i = 0; $i < 2; $i++) {
-//                $user = new User();
-//                $user->setEmail($faker->email);
-//                $user->setPassword($this->hasher->hashPassword($user,'user'));
-//                $user->setFirstName($faker->firstName);
-//                $user->setLastName($faker->lastName);
-//                $user->setPhone($faker->phoneNumber);
-//                $user->setRoles(["ROLE_ADMIN"]);
-//                $manager->persist($user);
-//            }
-//            for ($i = 0; $i < 5; $i++) {
-//                $user = new User();
-//                $user->setEmail($faker->email);
-//                $user->setPassword($this->hasher->hashPassword($user,'user'));
-//                $user->setFirstName($faker->firstName);
-//                $user->setLastName($faker->lastName);
-//                $user->setPhone($faker->phoneNumber);
-//                $user->setRoles(["ROLE_WORKER"]);
-//                $manager->persist($user);
-//            }
-//        $manager->flush();
+            for ($i = 0; $i < 2; $i++) {
+                $user = new User();
+                $user->setEmail($faker->email);
+                $user->setPassword($this->hasher->hashPassword($user,'user'));
+                $user->setFirstName($faker->firstName);
+                $user->setLastName($faker->lastName);
+                $user->setPhone($faker->phoneNumber);
+                $user->setRoles(["ROLE_ADMIN"]);
+                $manager->persist($user);
+            }
+            for ($i = 0; $i < 4; $i++) {
+                $user = new User();
+                $user->setEmail($faker->email);
+                $user->setPassword($this->hasher->hashPassword($user,'user'));
+                $user->setFirstName($faker->firstName);
+                $user->setLastName($faker->lastName);
+                $user->setPhone($faker->phoneNumber);
+                $user->setRoles(["ROLE_WORKER"]);
+                $manager->persist($user);
+            }
+        for ($i = 0; $i < 2; $i++) {
+            $user = new User();
+            $user->setEmail($faker->email);
+            $user->setPassword($this->hasher->hashPassword($user,'user'));
+            $user->setFirstName($faker->firstName);
+            $user->setLastName($faker->lastName);
+            $user->setPhone($faker->phoneNumber);
+            $user->setRoles(["ROLE_CEO"]);
+            $manager->persist($user);
+        }
+        for ($i = 0; $i < 2; $i++) {
+            $user = new User();
+            $user->setEmail($faker->email);
+            $user->setPassword($this->hasher->hashPassword($user,'user'));
+            $user->setFirstName($faker->firstName);
+            $user->setLastName($faker->lastName);
+            $user->setPhone($faker->phoneNumber);
+            $user->setRoles(["ROLE_SG"]);
+            $manager->persist($user);
+        }
 //
 ////        for ($i = 0; $i < 20; $i++) {
 ////            $worker = new Worker();
@@ -51,21 +70,18 @@ class AppFixtures extends Fixture
 ////            //pre execution ->
 ////            $manager->persist($worker);
 ////        }
-//        for ($i = 0; $i < 20; $i++) {
-//            $funder = new Funder();
-//            $funder->setName($faker->name);
-//            $funder->setEmail($faker->email);
-//            $funder->setPhone($faker->phoneNumber);
-//            $funder->setAddress($faker->address);
-//            $funder->setNbrActivities($faker->randomNumber());
-//            $funder->setFunderType($faker->randomLetter);
-//
-//            $manager->persist($funder);
-//        }
-////
-////        //execution
-////        $manager->flush();
-////
+        for ($i = 0; $i < 20; $i++) {
+            $funder = new Funder();
+            $funder->setName($faker->name);
+            $funder->setEmail($faker->email);
+            $funder->setPhone($faker->phoneNumber);
+            $funder->setAddress($faker->address);
+            $funder->setNbrActivities($faker->randomNumber());
+            $funder->setFunderType($faker->randomLetter);
+
+            $manager->persist($funder);
+        }
+
         for ($i = 0; $i < 20; $i++) {
             $patient = new Patient();
             $patient->setName($faker->name);

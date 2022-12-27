@@ -19,6 +19,7 @@
                         <thead>
                         <tr>
                             <th scope="col">Id</th>
+                            <th scope="col">Name</th>
                             <th scope="col">Funding Needed</th>
                             <th scope="col">Project Details</th>
                             {% if is_granted("ROLE_ADMIN") %}
@@ -30,6 +31,7 @@
                         {% for project in listOfProjects %}
                             <tr>
                                 <th scope="row">{{ project.id }}</th>
+                                <th scope="row">{{ project.name }}</th>
                                 <td>{{ project.fundingNeeded }}</td>
                                 <td>{{ project.projectDetails }}</td>
                                 {% if is_granted("ROLE_ADMIN") %}
